@@ -1,14 +1,10 @@
-import Data.List
-
-combinations :: (Ord a, Eq a) => Int -> [a] -> [[a]]
-combinations n xs = sort $ iterate applyExpand (toList xs) !! (n-1)
+combination :: Int -> [a] -> [[a]]
+combination 0 xs     = [[]]
+combination n []     = []
+combination n (x:xs) = ts ++ ds
   where
-  expandComb ys = map (\y->y:ys) (deleteAll ys xs)
-  applyExpand = concat . map expandComb
-  toList = map (\x->x:[])
-
-deleteAll :: (Eq a) => [a] -> [a] -> [a]
-deleteAll ys xs = foldl (\x y -> delete y x) xs ys
+  ts = [x:ys | ys <- combination (n-1) xs] 
+  ds = [ys | ys <- combination n xs]
 
 main = do 
-  print $ combinations 3 "abcdef"
+  print . length $ combination 3 "abcdef"
